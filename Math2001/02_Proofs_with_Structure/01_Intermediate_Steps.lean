@@ -74,12 +74,30 @@ example (a b : ℝ) (h : a ≤ b) : a ^ 3 ≤ b ^ 3 := by
 example {x : ℚ} (h1 : x ^ 2 = 4) (h2 : 1 < x) : x = 2 := by
   have h3 :=
   calc
-    x^2 = 4 := by rw [h1]
-    _ = 2 ^ 2 := by ring
-  cancel 2 at h3
+    x*(x+2) = x^2 + 2* x := by ring
+    _ = 4 + 2 * x := by rw [h1]
+    _ = 2*(x + 2) := by ring
+  cancel (x+2) at h3
 
 example {n : ℤ} (hn : n ^ 2 + 4 = 4 * n) : n = 2 := by
-  sorry
+  have h1 :=
+  calc
+    (n-2)^2 = n^2 + 4 - 4*n  := by ring
+    _ = 4*n -4*n := by rw [hn]
+    _ = 0^2 := by ring
+  cancel 2 at h1
+  calc
+    n = (n -2) +2 := by ring
+    _ = 0 + 2 := by rw [h1]
+    _ = 2 := by ring
 
 example (x y : ℚ) (h : x * y = 1) (h2 : x ≥ 1) : y ≤ 1 := by
-  sorry
+  have h3 :=
+    calc
+      x * y ≥ 1 := by rw [h]
+      _ > 0 := by numbers
+  cancel x at h3
+  calc
+    y = 1 * y  := by ring
+    _ ≤ x * y  := by rel [h2]
+    _ ≤ 1 := by rw [h]
